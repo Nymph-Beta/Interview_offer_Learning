@@ -1,0 +1,29 @@
+#### 剑指offer18.1 删除链表节点
+
+```
+给定单向链表的头指针和一个要删除的节点的值，定义一个函数删除该节点。返回删除后的链表的头节点。 
+
+示例1：
+输入：head = [4,5,1,9],node=5
+输出：[4,1,9]
+
+示例2：
+输入：head = [4,5,1,9],node=1
+输出：[4,5,9]
+
+```
+
+#### 方法一 :迭代(双指针)
+
+```
+    ListNode prev = head;
+    ListNode current = head.next;
+    while (current != null && current.val != val) {
+        prev = current;
+        current = current.next;
+    }
+    if (current != null) {
+        prev.next = current.next;
+    }
+    return head;
+```

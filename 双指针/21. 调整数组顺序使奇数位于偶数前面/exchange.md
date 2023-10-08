@@ -1,0 +1,103 @@
+#### 剑指offer21. 调整数组顺序使奇数位于偶数前面
+
+```
+输入一个长度为 n 整数数组，实现一个函数来调整该数组中数字的顺序，使得所有的奇数位于数组的前面部分，所有的偶数位于数组的后面部分，并保证奇数和奇数，偶数和偶数之间的相对位置不变。
+
+示例1
+ 输入：[1,2,3,4]
+ 返回值：[1,3,2,4]
+
+示例2
+ 输入：[2,4,6,5,7]
+ 返回值：[5,7,2,4,6]
+
+示例3
+ 输入：[1,3,5,6,7]
+ 返回值：[1,3,5,7,6]
+
+```
+
+#### 方法一: 哈希
+
+```
+1.创建一个哈希表，用于存储每个元素的奇偶性信息。
+2.遍历整数数组，将每个元素插入哈希表中，键为元素值，值为奇数或偶数的标记。
+3.创建一个新的数组，用于存储重新排列后的元素。
+4.遍历原始数组，根据哈希表中的标记，将奇数放入新数组的前半部分，将偶数放入新数组的后半部分。
+
+public int[] exchange(int[] nums) {
+        HashMap<Integer, Boolean> map = new HashMap<>();
+        for(int num :nums){
+            if(num % 2 == 0 ){
+                map.put(num, false);
+            }else{
+                map.put(num, true);
+            }
+        }
+        int[] res = new int[nums.length];
+        int i = 0;
+        for(int num :nums){
+            if(map.get(num)){
+                res[i] = num;
+                i++;
+            }
+        }
+        for(int num :nums){
+            if(!map.get(num)){
+                res[i] = num;
+                i++;
+            }
+        }
+        return res;
+    }
+```
+
+#### 方法二: 双指针
+
+```
+初始化： i , j双指针，分别指向数组 actions左右两端；
+循环交换： 当 i=j 时跳出；
+指针 i 遇到奇数则执行 i=i+1 跳过，直到找到偶数；
+指针 j 遇到偶数则执行 j=j−1跳过，直到找到奇数；
+交换 actions[i] 和 actions[j] 值；
+返回值： 返回已修改的 actions 数组。
+
+public int[] trainingPlan(int[] actions) {
+        int i = 0, j = actions.length - 1, tmp;
+        while(i < j) {
+            while(i < j && (actions[i] & 1) == 1) i++;
+            while(i < j && (actions[j] & 1) == 0) j--;
+            tmp = actions[i];
+            actions[i] = actions[j];
+            actions[j] = tmp;
+        }
+        return actions;
+    }
+
+```
+
+#### 方法三: 双端队列
+
+```
+public static int[] reorderArray(int[] array) {
+        if (array == null || array.length == 0) return array;
+
+        Deque<Integer> deque = new LinkedList<>();
+        for (int i = array.length - 1; i >= 0; i--) {
+            if ((array[i] & 1) == 1) {
+                // 如果是奇数，添加到队列前面
+                deque.offerFirst(array[i]);
+            } else {
+                // 如果是偶数，添加到队列后面
+                deque.offerLast(array[i]);
+            }
+        }
+
+        // 将队列中的元素复制回数组
+        int index = 0;
+        while (!deque.isEmpty()) {
+            array[index++] = deque.pollFirst();
+        }
+        return array;
+    }
+```

@@ -1,0 +1,71 @@
+#### 剑指offer35. 复杂链表的控制
+
+```
+输入一个复杂链表（每个节点中有节点值，以及两个指针，一个指向下一个节点，另一个特殊指针random指向一个随机节点），请对此链表进行深拷贝，并返回拷贝后的头结点。（注意，输出结果中请不要返回参数中的节点引用，否则判题程序会直接返回空）。 下图是一个含有5个结点的复杂链表。图中实线箭头表示next指针，虚线箭头表示random指针。为简单起见，指向null的指针没有画出。
+
+示例:
+输入:{1,2,3,4,5,3,5,#,2,#}
+输出:{1,2,3,4,5,3,5,#,2,#}
+```
+
+#### 题解
+
+* 对链表进行复制, 每个节点后面插入复制的节点并赋值
+
+  ```
+   while(cur != null){
+  	Node tmp = new Node(cur.val);
+          tmp.next = cur.next;
+          cur.next = tmp;
+          cur = tmp.next; 
+  }
+  ```
+* 对复制的节点进行random指针的链接
+
+  ```
+  cur.next.random = cur.random.next;
+  ```
+* 最后对两个链表进行分离
+
+  ```
+  cur = head.next;
+  Node pre = head;
+  Node res = head.next;
+  while(cur.next != null){
+  	pre.next = pre.next.next;
+          cur.next = cur.next.next;
+           pre = pre.next;
+           cur = cur.next;
+  }
+
+  pre.next = null;
+  ```
+
+#### 使用哈希实现上述过程
+
+```
+/** 更直观,不改变原有链表结构; 但需要额外空间,查找速度较慢*/
+public Node copyRandomList(Node head) {
+  
+        Node cur = head;
+        if(head == null)
+            return null;
+  
+        Map<Node, Node> map = new HashMap<>();
+  
+        while(cur != null){
+            map.put(cur, new Node(cur.val));
+            cur = cur.next;
+  
+        }
+  
+        cur = head;
+        while(cur != null){
+            map.get(cur).next = map.get(cur.next);
+            map.get(cur).random = map.get(cur.random);
+            cur = cur.next;
+        }
+  
+        return map.get(head);
+    }
+```

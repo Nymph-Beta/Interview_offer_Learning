@@ -1,0 +1,118 @@
+#### 剑指offer58 翻转单词顺序列
+
+```
+示例 1：
+输入: message = "the sky is blue"
+输出: "blue is sky the"
+
+示例 2：
+输入: message = "  hello world!  "
+输出: "world! hello"
+解释: 输入字符串可以在前面或者后面包含多余的空格，但是反转后的字符不能包括。
+
+示例 3：
+输入: message = "a good   example"
+输出: "example good a"
+解释: 如果两个单词间有多余的空格，将反转后单词间的空格减少到只含一个。
+```
+
+#### 方法一:split内置方法
+
+```
+使用 String 类的 split 方法来分割字符串。这个方法接受一个正则表达式作为参数，并根据该正则表达式来分割字符串。
+如果输入字符串有连续的空格，例如 "Hello World"，使用 split(" ") 将会得到一个空字符串作为数组中的一个元素。
+String[] parts = s.split("\\s+");
+\\s+ 是一个正则表达式，它匹配一个或多个空白字符（包括空格、制表符等）。这样，连续的空格只会被当作一个分隔符来处理。
+
+因为"输入字符串可以在前面或者后面包含多余的空格，但是反转后的字符不能包括。".则使用trim()方法去除字符串前后的空格
+
+```
+
+```
+public String reverseWords(String s) {
+        //String[] parts = s.split(" ");
+        //String[] parts = s.trim().split(" ");
+        String[] parts = s.trim().split("\\s+");
+      
+      
+        StringBuilder res = new StringBuilder();
+        for(int i = parts.length - 1; i >= 0; i--){
+            res.append(parts[i]);
+            if(i != 0){
+                res.append(" ");
+            }
+        }
+      
+        return res.toString();
+
+    }
+```
+
+#### 方法二: 双指针
+
+```
+初始化两个指针 start 和 end。开始时，都设置为字符串的起始位置。
+
+寻找空格或字符串的结束：移动 end 指针，直到遇到一个空格或达到字符串的结束。
+
+提取子串：使用 start 和 end 指针的位置，从原始字符串中提取子串，然后存入一个动态数组或列表中。
+
+跳过空格：增加 end 指针的位置，直到它不再指向空格，并将 start 指针设置为 end 指针的当前位置。
+
+重复：重复上述步骤，直到 end 指针到达字符串的末尾。
+
+逆序合并：从动态数组或列表的末尾开始，逆序地提取子串，并将它们与空格字符合并到一个新的字符串中
+```
+
+```
+
+/**双指针 */
+/**
+使用 trim() 确保从 s.substring(start, end) 提取的单词没有前导和尾随的空格。
+只有当单词不为空时才将其添加到 parts 列表中。
+反转 parts 列表，并在每个单词之间只添加一个空格。
+*/
+class Solution {
+    public String reverseWords(String s) {
+        List<String> parts = new ArrayList<>();
+
+        int start = 0, end = 0;
+
+        while(end < s.length()){
+            while(end < s.length() && s.charAt(end) != ' '){
+                end++;
+            }
+
+            //parts.add(s.substring(start, end));
+            String word = s.substring(start, end).trim(); 
+            // Use trim() to ensure no leading or trailing spaces
+            /**在注释代码中（您提供的最新版本），我们直接从原始字符串 s 中提取单词，并将其添加到 parts 列表中。
+               在现在代码中，我们还是从原始字符串 s 中提取单词，但在添加到 parts 列表之前，使用 trim() 方法确保单词不包含前导和尾随的空格。然后，我们还检查单词是否为空，以确保不向 parts 列表中添加空字符串。*/
+	   /**如s = "  the sky is   blue  ",
+             注释代码的parts = ["  the", "sky", "is", "  blue", "  "],
+             目前代码为parts = ["the", "sky", "is", "blue"]*/
+            if (!word.isEmpty()) {
+                parts.add(word);
+            }
+
+
+            while(end < s.length() && s.charAt(end) == ' '){
+                end++;
+            }
+
+            start = end;
+        }
+
+        StringBuilder res = new StringBuilder();
+        for(int i = parts.size() - 1; i >= 0; i--){
+            res.append(parts.get(i));
+            if(i != 0){
+                res.append(" ");
+            }
+        }
+
+        return res.toString();
+  
+    }
+}
+```
