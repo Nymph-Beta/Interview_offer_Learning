@@ -1,0 +1,64 @@
+#### 剑指offer09. 用栈实现两个队列
+
+```
+用两个栈来实现一个队列，使用n个元素来完成 n 次在队列尾部插入整数(push)和n次在队列头部删除整数(pop)的功能。 队列中的元素为int类型。保证操作合法，即保证pop操作时队列内已有元素
+
+示例 1：
+
+输入：
+["BookQueue", "push", "push", "pop"]
+[[], [1], [2], []]
+输出：[null,null,null,1]
+解释：
+MyQueue myQueue = new MyQueue();
+myQueue.push(1); // queue is: [1]
+myQueue.push(2); // queue is: [1, 2] (leftmost is front of the queue)
+myQueue.pop(); // return 1, queue is [2]
+```
+
+#### 题解
+
+```
+/**
+Deque<Integer> stack1; Deque<Integer> stack2; 
+这两行代码声明了两个双端队列，并在构造器中用 LinkedList 类进行了初始化，使其能作为栈使用。
+
+Java 的 Stack 类由于是线程安全的，所以在没有多线程的情况下，其性能不如 ArrayDeque（LinkedList 的数组版本，可以被当作栈使用）。
+实际编程中，使用 Deque 接口和 ArrayDeque 类来创建栈是一种更好的选择
+*/
+class CQueue {
+    Deque<Integer> stack1;
+    Deque<Integer> stack2;
+
+    public CQueue() {
+        stack1 = new LinkedList<Integer>();
+        stack2 = new LinkedList<Integer>();
+
+    }
+  
+    public void appendTail(int value) {
+        stack1.push(value);
+    }
+  
+    public int deleteHead() {
+        if(stack2.isEmpty()){
+            while(!stack1.isEmpty()){
+                stack2.push(stack1.pop());
+            }
+        }
+        if(stack2.isEmpty()){
+            return -1;
+        }else{
+            return stack2.pop();
+        }
+    }
+}
+
+
+/**
+ * Your CQueue object will be instantiated and called as such:
+ * CQueue obj = new CQueue();
+ * obj.appendTail(value);
+ * int param_2 = obj.deleteHead();
+ */
+```
